@@ -3,15 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use Database\Factories\FakeImageFactory;
 use GuzzleHttp\Client;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class CategoriesSeeder extends Seeder
 {
-
     public function run()
     {
         $pathFolder = 'public/storage/image/thumbnail/categories';

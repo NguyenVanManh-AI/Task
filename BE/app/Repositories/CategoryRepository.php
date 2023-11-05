@@ -3,8 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Category;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class CategoryRepository extends BaseRepository implements CategoryInterface
 {

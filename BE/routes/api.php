@@ -20,7 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::prefix('book')->controller(BookController::class)->group(function () {
     Route::post('/add', 'add');
     Route::post('update/{id}', 'edit');

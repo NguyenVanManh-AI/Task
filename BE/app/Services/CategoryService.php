@@ -2,14 +2,9 @@
 
 namespace App\Services;
 
-use App\Http\Requests\RequestCreateCategory;
-use App\Http\Requests\RequestUpdateCategory;
-use App\Models\Category;
-use App\Repositories\ArticleRepository;
 use App\Repositories\CategoryInterface;
 use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Throwable;
 
 class CategoryService
@@ -43,10 +38,10 @@ class CategoryService
     {
         try {
             $categorys = CategoryRepository::getCategory()->get();
+
             return $this->responseOK(200, $categorys, 'Xem tất cả danh mục thành công !');
         } catch (Throwable $e) {
             return $this->responseError(400, $e->getMessage());
         }
     }
-
 }

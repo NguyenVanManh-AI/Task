@@ -87,5 +87,4 @@ class BookRepository extends BaseRepository implements BookInterface
 
         return $query;
     }
-
 }

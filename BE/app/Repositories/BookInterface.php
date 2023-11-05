@@ -11,5 +11,4 @@ interface BookInterface extends RepositoryInterface
     public static function updateBook($result, $data);
 
     public static function searchBook($filter);
-
 }

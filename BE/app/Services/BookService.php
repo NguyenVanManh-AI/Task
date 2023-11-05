@@ -3,19 +3,14 @@
 namespace App\Services;
 
 use App\Http\Requests\RequestCreateBook;
-use App\Http\Requests\RequestCreateDepartment;
 use App\Http\Requests\RequestUpdateBook;
-use App\Http\Requests\RequestUpdateDepartment;
 use App\Models\Book;
 use App\Models\Category;
 use App\Repositories\BookInterface;
-use App\Repositories\HospitalDepartmentRepository;
-use App\Repositories\InforDoctorRepository;
-use App\Repositories\InforHospitalRepository;
+use Faker\Factory as FakerFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Faker\Factory as FakerFactory;
 use Throwable;
 
 class BookService
@@ -59,12 +54,14 @@ class BookService
     {
         try {
             $category = Category::find($request->id_category);
-            if(empty($category)) return $this->responseError(400, 'Không tìm thấy danh mục !');
+            if (empty($category)) {
+                return $this->responseError(400, 'Không tìm thấy danh mục !');
+            }
 
             $faker = FakerFactory::create();
             $thumbnail = $this->saveImage($request);
             $data = array_merge(
-                $request->all(), 
+                $request->all(),
                 [
                     'thumbnail' => $thumbnail,
                     'isbn' => $faker->isbn10,
@@ -72,6 +69,7 @@ class BookService
                 ]
             );
             $book = $this->bookRepository->createBook($data);
+
             return $this->responseOK(201, $book, 'Thêm mới sách thành công !');
         } catch (Throwable $e) {
             return $this->responseError(400, $e->getMessage());
@@ -109,8 +107,11 @@ class BookService
         try {
             $book = $this->bookRepository->findById($id);
             if ($book) {
-                if ($book->thumbnail) File::delete($book->thumbnail);
+                if ($book->thumbnail) {
+                    File::delete($book->thumbnail);
+                }
                 $book->delete();
+
                 return $this->responseOK(200, null, 'Xóa sách thành công !');
             } else {
                 return $this->responseError(400, 'Không tìm thấy sách !');
@@ -123,7 +124,6 @@ class BookService
     public function deleteMany(Request $request)
     {
         try {
-
             $list_id = $request->list_id ?? [0];
             $filter = [
                 'list_id' => $list_id,
@@ -131,7 +131,9 @@ class BookService
             $books = $this->bookRepository->searchBook($filter)->get();
             if (count($books) > 0) {
                 foreach ($books as $index => $book) {
-                    if ($book->book_thumbnail) File::delete($book->book_thumbnail);
+                    if ($book->book_thumbnail) {
+                        File::delete($book->book_thumbnail);
+                    }
                     Book::find($book->book_id)->delete();
                 }
             } else {
@@ -177,7 +179,7 @@ class BookService
                 'search' => $request->search ?? '',
                 'category_id' => $request->category_id ?? '',
                 'orderBy' => $orderBy,
-                'orderDirection' => $orderDirection
+                'orderDirection' => $orderDirection,
             ];
 
             if (!(empty($request->paginate))) {
