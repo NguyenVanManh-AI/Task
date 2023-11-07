@@ -62,8 +62,8 @@
                                     <div class="form-group row">
                                         <label for="staticEmail" class="col-sm-3 col-form-label">Giá </label>
                                         <div class="col-sm-9">
-                                            <input required type="text" v-model="book.price" class="form-control"
-                                                id="staticEmail" placeholder="Giá (VNĐ)" v-on:keypress="NumbersOnly">
+                                            <input required type="number" max="9999999999999" v-model="book.price" class="form-control"
+                                                id="staticEmail" placeholder="Giá (VNĐ)" >
                                         </div>
                                     </div>
                                 </div>
@@ -138,20 +138,11 @@ export default {
                     this.book.thumbnail = file;
                 };
                 reader.readAsDataURL(file);
-            } else {
-                this.previewImageSrc = null;
-                this.book.thumbnail = null;
-            }
+            } else this.removeFile();
         },
         removeFile: function () {
             this.previewImageSrc = null;
             this.book.thumbnail = null;
-        },
-        NumbersOnly(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) evt.preventDefault();
-            else return true;
         },
         addBook: function () {
             const formData = new FormData();

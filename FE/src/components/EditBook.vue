@@ -62,8 +62,8 @@
                                     <div class="form-group row">
                                         <label for="staticEmail" class="col-sm-3 col-form-label">Giá </label>
                                         <div class="col-sm-9">
-                                            <input required type="text" v-model="book.price" class="form-control"
-                                                id="staticEmail" placeholder="Giá (VNĐ)" v-on:keypress="NumbersOnly">
+                                            <input required type="number" max="9999999999999" v-model="book.price" class="form-control"
+                                                id="staticEmail" placeholder="Giá (VNĐ)" >
                                         </div>
                                     </div>
                                 </div>
@@ -144,22 +144,12 @@ export default {
                     this.updateImage = true;
                 };
                 reader.readAsDataURL(file);
-            } else {
-                this.previewImageSrc = null;
-                this.book.thumbnail = null;
-                this.updateImage = false;
-            }
+            } else this.removeFile();
         },
         removeFile: function () {
             this.previewImageSrc = null;
             this.book.thumbnail = null;
             this.updateImage = false;
-        },
-        NumbersOnly(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) evt.preventDefault();
-            else return true;
         },
         updateBook: function () {
             const formData = new FormData();
@@ -184,6 +174,7 @@ export default {
                 })
                 .catch((error) => {
                     const { emitEvent } = useEventBus();
+                    console.error(error);
                     if (error.response.data.data) emitEvent('eventError', error.response.data.data[0]);
                     else emitEvent('eventError', 'Cập nhật sách thất bại !');
                 })
@@ -195,6 +186,7 @@ export default {
             handler(newVal) {
                 if (newVal) {
                     this.book = newVal;
+                    this.book = Object.assign({}, newVal);
                     this.previewImageSrc = this.config.URL + newVal.book_thumbnail;
                 }
             },

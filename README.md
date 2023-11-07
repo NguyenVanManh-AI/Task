@@ -8,6 +8,7 @@ $ cd BE
 $ composer i  
 $ npm i 
 $ copy .env.example .env
+$ rmdir /s /q public\storage
 $ php artisan config:clear
 $ php artisan route:clear
 $ php artisan optimize:clear
@@ -18,7 +19,7 @@ $ php artisan jwt:secret
 $ php artisan cache:clear
 $ php artisan storage:link
 $ php artisan migrate:fresh --seed 
-$ php artisan serve
+$ php artisan serve 
 ```
 
 Run Vuejs 
