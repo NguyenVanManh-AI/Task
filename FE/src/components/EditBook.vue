@@ -184,7 +184,6 @@ export default {
             immediate: true,
             handler(newVal) {
                 if (newVal) {
-                    this.book = newVal;
                     this.book = Object.assign({}, newVal);
                     this.previewImageSrc = this.config.URL + newVal.book_thumbnail;
                 }
