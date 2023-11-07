@@ -28,7 +28,10 @@
 <script>
 
 import BaseRequest from '../restful/admin/core/BaseRequest';
-import useEventBus from '../composables/useEventBus'
+import useEventBus from '../composables/useEventBus';
+
+const { emitEvent } = useEventBus();
+
 export default {
     name: "DeleteBook",
     props: {
@@ -40,12 +43,10 @@ export default {
         deleteBook: function () {
             BaseRequest.delete('book/delete/' + this.bookSelected.book_id)
                 .then((data) => {
-                    const { emitEvent } = useEventBus();
                     emitEvent('eventSuccess', data.message);
                     window.location.reload();
                 })
                 .catch(() => {
-                    const { emitEvent } = useEventBus();
                     emitEvent('eventError', 'Xóa sách thất bại !');
                 })
             const closeButton = this.$refs.closeButton;

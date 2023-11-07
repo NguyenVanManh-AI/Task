@@ -40,8 +40,8 @@
             </div>
             <div class="pr-1">
                 <div class="input-group">
-                    <button data-toggle="modal"
-                            data-target="#addBook" type="button" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>
+                    <button data-toggle="modal" data-target="#addBook" type="button" class="btn btn-success"><i
+                            class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
             <div class="pr-0" v-if="selectedBooks.length > 0">
@@ -88,11 +88,11 @@
                     <td>{{ book.publisher }}</td>
                     <td>{{ formatPrice(book.price) }}đ</td>
 
-                    <td>{{ formatDate(book.updated_at)}}</td>
+                    <td>{{ formatDate(book.updated_at) }}</td>
                     <td>
                         <button type="button" @click="selectBook(book)" class="btn btn-primary mr-1" data-toggle="modal"
                             data-target="#detailBook"><i class="fa-solid fa-eye"></i></button>
-                        <button  @click="selectBook(book)" type="button" class="btn btn-primary" data-toggle="modal"
+                        <button @click="selectBook(book)" type="button" class="btn btn-primary" data-toggle="modal"
                             data-target="#editBook"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button @click="selectBook(book)" type="button" class="btn btn-danger mt-1" data-toggle="modal"
                             data-target="#deleteBook"><i class="fa-solid fa-trash"></i></button>
@@ -108,13 +108,8 @@
         </div>
         <DeleteBook :bookSelected="bookSelected"></DeleteBook>
         <DeletesBook :selectedBooks="selectedBooks" :books="books"></DeletesBook>
-        <DetailBook 
-            :config="config"
-            :bookSelected="bookSelected"
-            :format-price="formatPrice" 
-            :truncated-title="truncatedTitle"
-            :formatDate="formatDate"
-        ></DetailBook>
+        <DetailBook :config="config" :bookSelected="bookSelected" :format-price="formatPrice"
+            :truncated-title="truncatedTitle" :formatDate="formatDate"></DetailBook>
         <AddBook :config="config" :categories="categories"></AddBook>
         <EditBook :config="config" :categories="categories" :bookSelected="bookSelected"></EditBook>
 
@@ -132,6 +127,8 @@ import DeletesBook from './DeletesBook';
 import DetailBook from './DetailBook';
 import AddBook from './AddBook';
 import EditBook from './EditBook';
+
+const { emitEvent } = useEventBus();
 
 export default {
     name: "BookAdmin",
@@ -163,9 +160,9 @@ export default {
             books: [],
 
             bookSelected: {
-                title:'',
-                price:0,
-                updated_at:'',
+                title: '',
+                price: 0,
+                updated_at: '',
             },
             selectedBooks: [],
         }
@@ -174,12 +171,10 @@ export default {
         BaseRequest.get('category')
             .then((data) => {
                 this.categories = data.data;
-                const { emitEvent } = useEventBus();
                 emitEvent('eventSuccess', data.message);
             })
             .catch(() => {
-                const { emitEvent } = useEventBus();
-                emitEvent('eventError', 'Lỗi khi lấy dữ liệu');
+                emitEvent('eventError', 'Lỗi khi lấy dữ liệu danh mục');
             });
 
         const queryString = window.location.search;
@@ -207,8 +202,7 @@ export default {
                     this.total = data.data.total;
                 })
                 .catch(() => {
-                    const { emitEvent } = useEventBus();
-                    emitEvent('eventError', 'Lỗi khi lấy dữ liệu');
+                    emitEvent('eventError', 'Lỗi khi lấy dữ liệu sách');
                 });
         },
 
@@ -221,7 +215,7 @@ export default {
             else return title;
         },
         formatDate: function (date) {
-            return date.split('T')[0] 
+            return date.split('T')[0]
         },
 
         clickCallback: function (pageNum) {

@@ -14,7 +14,8 @@
                                 <div>
                                     <img class="mx-auto mb-3" :src="config.URL + bookSelected.book_thumbnail" alt="">
                                 </div>
-                                <div class="title"><span class="mr-2"><i class="fa-solid fa-bookmark"></i></span> <strong> {{ bookSelected.title }}</strong></div>
+                                <div class="title"><span class="mr-2"><i class="fa-solid fa-bookmark"></i></span> <strong>
+                                        {{ bookSelected.title }}</strong></div>
                             </div>
                             <div class="col6">
                                 <li class="mg-bottom"><strong>ID : </strong> {{ bookSelected.id }} </li>
@@ -43,6 +44,8 @@
 import BaseRequest from '../restful/admin/core/BaseRequest';
 import useEventBus from '../composables/useEventBus';
 
+const { emitEvent } = useEventBus();
+
 export default {
     name: "DetailBook",
     props: {
@@ -58,12 +61,10 @@ export default {
         deleteBook: function () {
             BaseRequest.delete('book/delete/' + this.bookSelected.book_id)
                 .then((data) => {
-                    const { emitEvent } = useEventBus();
                     emitEvent('eventSuccess', data.message);
                     window.location.reload();
                 })
                 .catch(() => {
-                    const { emitEvent } = useEventBus();
                     emitEvent('eventError', 'Xóa sách thất bại !');
                 })
             const closeButton = this.$refs.closeButton;
@@ -103,6 +104,7 @@ li strong {
 .mg-bottom {
     border-bottom: 1px solid rgb(236, 236, 236);
 }
+
 #left-detail {
     display: flex;
     justify-content: center;
@@ -112,6 +114,4 @@ li strong {
     color: rgb(96, 96, 96);
     font-style: italic;
 }
-
-
 </style>

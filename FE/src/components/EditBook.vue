@@ -62,8 +62,8 @@
                                     <div class="form-group row">
                                         <label for="staticEmail" class="col-sm-3 col-form-label">Giá </label>
                                         <div class="col-sm-9">
-                                            <input required type="number" max="9999999999999" v-model="book.price" class="form-control"
-                                                id="staticEmail" placeholder="Giá (VNĐ)" >
+                                            <input required type="number" max="9999999999999" v-model="book.price"
+                                                class="form-control" id="staticEmail" placeholder="Giá (VNĐ)">
                                         </div>
                                     </div>
                                 </div>
@@ -102,6 +102,8 @@ import useEventBus from '../composables/useEventBus';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
+const { emitEvent } = useEventBus();
+
 export default {
     name: "EditBook",
     props: {
@@ -122,7 +124,7 @@ export default {
                 thumbnail: null,
             },
             previewImageSrc: null,
-            updateImage:false,
+            updateImage: false,
         }
     },
     mounted() {
@@ -153,27 +155,18 @@ export default {
         },
         updateBook: function () {
             const formData = new FormData();
-            formData.append('title', this.book.title);
-            formData.append('author', this.book.author);
-            formData.append('id_category', this.book.id_category);
-            formData.append('publication_year', this.book.publication_year);
-            formData.append('publisher', this.book.publisher);
-            formData.append('price', this.book.price);
+            const fields = ['title', 'author', 'id_category', 'publication_year', 'publisher', 'price'];
+            for (const field of fields) formData.append(field, this.book[field]);
+            if (this.updateImage) formData.append('thumbnail', this.book.thumbnail);
 
-            if(this.updateImage) {
-                formData.append('thumbnail', this.book.thumbnail);
-            }
-
-            BaseRequest.post('book/update/'+this.book.book_id, formData)
+            BaseRequest.post('book/update/' + this.book.book_id, formData)
                 .then((data) => {
-                    const { emitEvent } = useEventBus();
                     emitEvent('eventSuccess', data.message);
                     const closeAdd = this.$refs.editBook;
                     closeAdd.click();
                     window.location.reload();
                 })
                 .catch((error) => {
-                    const { emitEvent } = useEventBus();
                     if (error.response.data.data) emitEvent('eventError', error.response.data.data[0]);
                     else emitEvent('eventError', 'Cập nhật sách thất bại !');
                 })

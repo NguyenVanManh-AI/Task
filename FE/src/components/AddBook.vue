@@ -62,8 +62,8 @@
                                     <div class="form-group row">
                                         <label for="staticEmail" class="col-sm-3 col-form-label">Giá </label>
                                         <div class="col-sm-9">
-                                            <input required type="number" max="9999999999999" v-model="book.price" class="form-control"
-                                                id="staticEmail" placeholder="Giá (VNĐ)" >
+                                            <input required type="number" max="9999999999999" v-model="book.price"
+                                                class="form-control" id="staticEmail" placeholder="Giá (VNĐ)">
                                         </div>
                                     </div>
                                 </div>
@@ -101,6 +101,8 @@ import BaseRequest from '../restful/admin/core/BaseRequest';
 import useEventBus from '../composables/useEventBus';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+
+const { emitEvent } = useEventBus();
 
 export default {
     name: "AddBook",
@@ -147,24 +149,17 @@ export default {
         },
         addBook: function () {
             const formData = new FormData();
-            formData.append('title', this.book.title);
-            formData.append('author', this.book.author);
-            formData.append('id_category', this.book.id_category);
-            formData.append('publication_year', this.book.publication_year);
-            formData.append('publisher', this.book.publisher);
-            formData.append('price', this.book.price);
-            formData.append('thumbnail', this.book.thumbnail);
+            const fields = ['title', 'author', 'id_category', 'publication_year', 'publisher', 'price', 'thumbnail'];
+            for (const field of fields) formData.append(field, this.book[field]);
 
             BaseRequest.post('book/add', formData)
                 .then((data) => {
-                    const { emitEvent } = useEventBus();
                     emitEvent('eventSuccess', data.message);
                     const closeAdd = this.$refs.addBook;
                     closeAdd.click();
                     window.location.reload();
                 })
                 .catch((error) => {
-                    const { emitEvent } = useEventBus();
                     if (error.response.data.data) emitEvent('eventError', error.response.data.data[0]);
                     else emitEvent('eventError', 'Thêm sách thất bại !');
                 })
