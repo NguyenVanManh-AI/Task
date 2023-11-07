@@ -174,7 +174,6 @@ export default {
                 })
                 .catch((error) => {
                     const { emitEvent } = useEventBus();
-                    console.error(error);
                     if (error.response.data.data) emitEvent('eventError', error.response.data.data[0]);
                     else emitEvent('eventError', 'Cập nhật sách thất bại !');
                 })

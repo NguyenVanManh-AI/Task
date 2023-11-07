@@ -36,7 +36,7 @@
                                         <div class="col-sm-8">
                                             <div class="dropbox">
                                                 <input required class="input-file" type="file" @change="previewImage"
-                                                    accept="image/*" />
+                                                    accept="image/*" ref="fileInput" />
                                                 <img class="upload" src='../assets/upload-file.png'
                                                     v-if="previewImageSrc == null">
                                                 <div v-if="previewImageSrc" class="box-preview">
@@ -143,6 +143,7 @@ export default {
         removeFile: function () {
             this.previewImageSrc = null;
             this.book.thumbnail = null;
+            this.$refs.fileInput.value = '';
         },
         addBook: function () {
             const formData = new FormData();
